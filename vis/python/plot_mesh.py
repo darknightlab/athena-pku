@@ -29,7 +29,8 @@ def main(**kwargs):
 
     # Read and plot block edges
     fig = plt.figure()
-    ax = fig.gca(projection='3d')
+    # ax = fig.gca(projection='3d')
+    ax = fig.add_subplot(projection='3d')
     x = []
     y = []
     z = []

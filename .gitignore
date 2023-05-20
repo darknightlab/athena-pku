@@ -1,3 +1,9 @@
+# Output dir
+outputs/
+
+# Mesh structure dat
+mesh_structure.dat
+
 # Configured outputs
 Makefile
 src/defs.hpp
