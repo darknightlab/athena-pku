@@ -5,7 +5,7 @@
 mkdir outputs
 
 # Configure
-python configure.py -g -b --prob gr_torus --coord=kerr-schild --flux hlle --nghost 4 -hdf5 --hdf5_path=/usr/lib/hdf5 -omp
+python configure.py -g -b --prob gr_my_torus --coord=kerr-schild --flux hlle --nghost 4 -hdf5 --hdf5_path=/usr/lib/hdf5 -omp
 
 # Build with openmp
 make clean && make -j 16
