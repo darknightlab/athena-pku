@@ -1,7 +1,7 @@
 <comment>
 problem   = Fishbone-Moncrief equilibrium torus
 reference = Fishbone & Moncrief 1976, ApJ 207 962
-configure = -g -b --prob gr_torus --coord=kerr-schild --flux hlle --nghost 4 -hdf5 --hdf5_path=/usr/lib/hdf5 -omp
+configure = -g -b --prob gr_my_torus --coord=kerr-schild --flux hlle --nghost 4 -hdf5 --hdf5_path=/usr/lib/hdf5 -omp
 
 <job>
 problem_id = my_torus  # problem ID: base name of output files
@@ -23,7 +23,7 @@ data_format = %24.16e  # output precision
 file_type = hdf5  # HDF5 data dump
 variable  = prim  # variables to be output
 id        = prim  # filename
-dt        = 1.0   # time increment between outputs
+dt        = 1   # time increment between outputs
 xdmf      = 0     # flag indicating whether XML auxiliary file should be output
 
 <output3>
@@ -40,18 +40,18 @@ dt        = 100.0  # time increment between outputs
 <mesh>
 
 # threading (OMP) control
-num_threads = 6
+num_threads = 16
 
 # radial coordinate in global root grid
-nx1    = 64                  # number of cells
+nx1    = 32                  # number of cells
 x1min  = 1.7811841172555203  # minimum
-x1max  = 50.0                # maximum
+x1max  = 200.0                # maximum
 x1rat  = 1.0476319576931545  # ratio of adjacent widths
 ix1_bc = user                # inner boundary
 ox1_bc = user                # outer boundary
 
 # polar coordinate in global root grid
-nx2    = 64                  # number of cells in direction
+nx2    = 16                  # number of cells in direction
 x2min  = 0.0                 # minimum
 x2max  = 3.1415926535897932  # maximum
 x2rat  = 1.0                 # ration of adjacent cell widths
@@ -59,33 +59,51 @@ ix2_bc = polar               # upper boundary
 ox2_bc = polar               # lower boundary
 
 # azimuthal coordinate in global root grid
-nx3    = 64                  # number of cells in direction
+nx3    = 8                  # number of cells in direction
 x3min  = 0.0                 # minimum
 x3max  = 6.2831853071795862  # maximum
 ix3_bc = periodic            # clockwise boundary
 ox3_bc = periodic            # counterclockwise boundary
 
 # mesh refinement control
-refinement = none
+refinement = static
 
 <meshblock>
-nx1 = 16  # block size in r-direction
-nx2 = 16  # block size in theta-direction
-nx3 = 16  # block size in phi-direction
+nx1 = 8  # block size in r-direction
+nx2 = 8  # block size in theta-direction
+nx3 = 8  # block size in phi-direction
 
 <refinement1>
 level = 1                   # refinement level relative to root (0)
 x1min = 1.7811841172555203  # outermost inner boundary
+x1max = 80.0                # innermost outer boundary
+x2min = 0.5235987755982989  # lowest upper boundary = 0.9817477042468103 - tilt/180*pi
+x2max = 2.617993877991494  # uppermost lower boundary = 2.1598449493429825 + tilt/180*pi
+x3min = 0.0                 # most counterclockwise clockwise boundary
+x3max = 6.2831853071795862  # most clockwise counterclockwise boundary
+
+<refinement2>
+level = 2                   # refinement level relative to root (0)
+x1min = 1.7811841172555203  # outermost inner boundary
 x1max = 35.0                # innermost outer boundary
-x2min = 0.19634954084936207  # lowest upper boundary = 0.9817477042468103 - tilt/180*pi
-x2max = 2.6834437249412812  # uppermost lower boundary = 2.1598449493429825 + tilt/180*pi
+x2min = 1.0471975511965976  # lowest upper boundary = 0.9817477042468103 - tilt/180*pi
+x2max = 2.0943951023931953  # uppermost lower boundary = 2.1598449493429825 + tilt/180*pi
+x3min = 0.0                 # most counterclockwise clockwise boundary
+x3max = 6.2831853071795862  # most clockwise counterclockwise boundary
+
+<refinement3>
+level = 3                   # refinement level relative to root (0)
+x1min = 1.7811841172555203  # outermost inner boundary
+x1max = 18.0                # innermost outer boundary
+x2min = 1.3089969389957472  # lowest upper boundary = 0.9817477042468103 - tilt/180*pi
+x2max = 1.8325957145940461  # uppermost lower boundary = 2.1598449493429825 + tilt/180*pi
 x3min = 0.0                 # most counterclockwise clockwise boundary
 x3max = 6.2831853071795862  # most clockwise counterclockwise boundary
 
 <coord>
 m = 1.0  # black hole mass M
 a = 0.9375  # black hole spin a (0 <= a/M < 1)
-h = 1.0  # grid compression parameter
+h = 0.3  # grid compression parameter
 
 <hydro>
 gamma     = 1.6666666666666667  # ratio of specific heats Gamma
@@ -103,14 +121,14 @@ gamma_max = 50.0                # ceiling on normal Lorentz factor gamma
 
 # torus parameters
 prograde   = true    # flag indicating disk is prograde
-r_edge     = 15.0     # radius of inner edge of disk
-r_peak     = 22.9    # radius of pressure maximum; use l instead if negative
+r_edge     = 12.5     # radius of inner edge of disk
+r_peak     = 25    # radius of pressure maximum; use l instead if negative
 l          = 4.428   # constant ang. mom. per unit mass u^t u_phi; only used if r_peak < 0
 r_peak_max = 1000.0  # upper bound on r_peak if setting l and finding r_peak
 rho_max    = 1.0     # scale density to have this value at pressure maximum
 
 # tilt parameter
-tilt_angle = 45.0  # angle (degrees) at which to incline disk spin axis relative to BH spin
+tilt_angle = 30.0  # angle (degrees) at which to incline disk spin axis relative to BH spin
                   # axis (z-axis) in direction of x-axis (theta = pi/2, phi = 0)
 
 # magnetic field configuration
@@ -132,7 +150,7 @@ pot_pgas_cutoff = 1.0e-8              # amount to subtract from p_gas
 
 # additional magnetic field parameters
 pot_samples = 5       # points per edge to use if numerically integrating potential
-pot_amp     = 0.4178  # overall scaling of potential
+pot_amp     = 0.3      # 0.4178  # overall scaling of potential
 
 # perturbation parameters
 pert_amp = 0.0  # amplitude of perturbations to cylindrical radial velocity \tilde{u}^R

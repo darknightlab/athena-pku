@@ -18,4 +18,6 @@ python vis/python/plot_mesh.py --output outputs/mesh.jpg
 ./bin/athena -i inputs/mhd_gr/athinput.my_torus time/tlim=0 -d outputs
 vis/python/plot_spherical.py outputs/my_torus.prim.00000.athdf rho outputs/initial.png --colormap RdBu_r --logc
 
+vis/python/plot_spherical.py outputs/my_torus.prim.00000.athdf rho outputs/initial.png --colormap RdBu_r --logc --stream Bcc -r 40
+
 export CYCLE=00000 && vis/python/plot_spherical.py outputs/my_torus.prim.$CYCLE.athdf rho outputs/my_torus.$CYCLE.png --colormap RdBu_r --logc
