@@ -146,8 +146,7 @@ void HLLETransforming(MeshBlock *pmb, const int k, const int j, const int il,
   const Real gamma_prime = gamma_adi / (gamma_adi - 1.0);
 
   // Go through each interface
-  // TODO(KGF): see comment in hllc_rel.cpp
-  //#pragma omp simd simdlen(SIMD_WIDTH)
+#pragma omp simd simdlen(SIMD_WIDTH)
   for (int i=il; i<=iu; ++i) {
     // Extract left primitives
     Real rho_l = prim_l(IDN,i);

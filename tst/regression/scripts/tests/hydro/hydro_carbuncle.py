@@ -42,7 +42,7 @@ def run(**kwargs):
         move(_exec + '_' + flux, _exec)
         os.system('mv obj_' + flux + ' obj')
         athena.run('hydro/athinput.quirk',
-                   arguments=['time/ncycle_out=0'])
+                   arguments=[])
     return 'skip_lcov'
 
 

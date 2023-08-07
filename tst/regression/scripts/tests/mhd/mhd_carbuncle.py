@@ -26,9 +26,9 @@ def prepare(**kwargs):
             _fluxes = [tmp[1]]
     for flux in _fluxes:
         athena.configure('b',
-                         prob='quirk',
-                         coord='cartesian',
-                         flux=flux, **kwargs)
+            prob='quirk',
+            coord='cartesian',
+            flux=flux, **kwargs)
         # to save time, reuse compiled .o files for all executables created in this test:
         athena.make(clean_first=False)
         move(_exec, _exec + '_' + flux)
@@ -42,7 +42,7 @@ def run(**kwargs):
         move(_exec + '_' + flux, _exec)
         os.system('mv obj_' + flux + ' obj')
         athena.run('hydro/athinput.quirk',
-                   arguments=['time/ncycle_out=0'])
+                   arguments=[])
     return 'skip_lcov'
 
 
