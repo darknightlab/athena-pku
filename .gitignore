@@ -1,5 +1,6 @@
 # Output dir
-outputs/
+outputs*
+.vscode/
 
 # Mesh structure dat
 mesh_structure.dat

@@ -272,8 +272,8 @@ void Radiation(MeshBlock *pmb, const Real time, const Real dt, const AthenaArray
                const AthenaArray<Real> &prim_scalar, const AthenaArray<Real> &bcc,
                AthenaArray<Real> &cons, AthenaArray<Real> &cons_scalar)
 {
-  const Real s = 0.0;
-  const Real q = 0.5;
+  const Real s = 0.1;
+  const Real q = 1;
   const Real Theta = 0.03;
 
   const Real Z1 = 1 + pow(1 - a * a, 1.0 / 3.0) * (pow(1 + a, 1.0 / 3.0) + pow(1 - a, 1.0 / 3.0));
@@ -305,6 +305,11 @@ void Radiation(MeshBlock *pmb, const Real time, const Real dt, const AthenaArray
         Real r, th, ph;
         GetKerrSchildCoordinates(x1, x2, x3, &r, &th, &ph);
 
+        if (r <= r_isco)
+        {
+          continue;
+        }
+
         // Extract primitives
         const Real &rho = prim(IDN, k, j, i);
         const Real &pgas = prim(IEN, k, j, i);
@@ -313,7 +318,7 @@ void Radiation(MeshBlock *pmb, const Real time, const Real dt, const AthenaArray
         Real Omega = 1.0 / (pow(r, 1.5) + a);
         const Real TrO = Theta * r * Omega;
         const Real param = pgas / rho / (TrO * TrO) - 1.0;
-        if (param < 0.0)
+        if (param <= 0.0)
         {
           continue;
         }
@@ -346,13 +351,22 @@ void Radiation(MeshBlock *pmb, const Real time, const Real dt, const AthenaArray
         Real u2 = uu2;
         Real u3 = uu3;
 
-        const Real sqrt_r_isco_over_r = sqrt(r_isco / r);
-        const Real L = s * Omega * pgas * (1.0 - sqrt_r_isco_over_r) * pow(param, q);
+        Real u_0 = g_00 * u0 + g_01 * u1 + g_03 * u3;
+        Real u_1 = g_01 * u0 + g_11 * u1 + g_13 * u3;
+        Real u_2 = g_22 * u2;
+        Real u_3 = g_03 * u0 + g_13 * u1 + g_33 * u3;
 
-        Real s_1 = -L * u1;
-        Real s_2 = -L * u2;
-        Real s_3 = -L * u3;
-        Real s_en = -L * u0;
+        const Real sqrt_r_isco_over_r = sqrt(r_isco / r);
+        // The factors of (-g)1/2 are not included in the output data, nor should they be included when setting conserved variables in problem generators
+        // https://github.com/PrincetonUniversity/athena/wiki/General-Relativity
+        //
+        // The 2 factor is from param+abs(param)
+        const Real L = s * Omega * pgas * (1.0 - sqrt_r_isco_over_r) * pow(2 * param, q);
+
+        Real s_1 = -L * u_1;
+        Real s_2 = -L * u_2;
+        Real s_3 = -L * u_3;
+        Real s_en = -L * u_0;
 
         // IDN=0, IM1=1, IM2=2, IM3=3, IEN=4
         // density, momemtum, total energy

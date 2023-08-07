@@ -316,7 +316,9 @@ def main(**kwargs):
         else:
             plt.xlabel(r'$x$')
             plt.ylabel(r'$z$')
-    plt.colorbar(im)
+    cbar = plt.colorbar(im)
+    cbar.ax.set_title(kwargs['quantity'])
+    plt.gcf().axes[0].set_title("t=%d"%(int(kwargs['data_file'].split('.')[-2]) * kwargs['time_step']))
     if kwargs['output_file'] == 'show':
         plt.show()
     else:
@@ -391,5 +393,9 @@ if __name__ == '__main__':
                         default=None,
                         help=('compression parameter h in '
                               'theta = pi*x_2 + (1-h)/2 * sin(2*pi*x_2)'))
+    parser.add_argument('-t', '--time-step',
+                        type=int,
+                        default=1,
+                        help='time step of data')
     args = parser.parse_args()
     main(**vars(args))
