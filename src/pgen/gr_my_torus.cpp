@@ -80,6 +80,7 @@ namespace
 namespace
 {
   Real m, a;                                   // black hole parameters
+  Real s, q, Theta;                            // radiative pseudo force parameters
   Real h_grid;                                 // grid compression parameter
   Real gamma_adi;                              // adiabatic index
   Real rho_min, rho_pow, pgas_min, pgas_pow;   // background parameters
@@ -128,6 +129,10 @@ void Mesh::InitUserMeshData(ParameterInput *pin)
   {
     h_grid = pin->GetOrAddReal("coord", "h", 1.0);
   }
+
+  s = pin->GetReal("radiation", "s");
+  q = pin->GetReal("radiation", "q");
+  Theta = pin->GetReal("radiation", "Theta");
 
   // Read fluid parameters from input file
   gamma_adi = pin->GetReal("hydro", "gamma");
@@ -272,9 +277,9 @@ void Radiation(MeshBlock *pmb, const Real time, const Real dt, const AthenaArray
                const AthenaArray<Real> &prim_scalar, const AthenaArray<Real> &bcc,
                AthenaArray<Real> &cons, AthenaArray<Real> &cons_scalar)
 {
-  const Real s = 0.1;
-  const Real q = 1;
-  const Real Theta = 0.03;
+  // const Real s = 0.1;
+  // const Real q = 1;
+  // const Real Theta = 0.03;
 
   const Real Z1 = 1 + pow(1 - a * a, 1.0 / 3.0) * (pow(1 + a, 1.0 / 3.0) + pow(1 - a, 1.0 / 3.0));
   const Real Z2 = sqrt(3 * a * a + Z1 * Z1);
